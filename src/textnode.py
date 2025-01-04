@@ -1,13 +1,13 @@
-from enum import Enum
 from htmlnode import LeafNode
+from enum import Enum
 
 class TextType(Enum):
-    TEXT = "Normal text"
-    BOLD = "Bold text"
-    ITALIC = "Italic text"
-    CODE = "Code text"
-    LINKS = "Links"
-    IMAGES = "Images"
+    TEXT = "text"
+    BOLD = "bold"
+    ITALIC = "italic"
+    CODE = "code"
+    LINKS = "link"
+    IMAGES = "image"
 
 class TextNode():
     def __init__(self, text, text_type, url=None):
@@ -25,19 +25,17 @@ class TextNode():
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type.value}, {self.url})"
     
-    def text_node_to_html_node(self):
-        match self.text_type:
-            case TextType.TEXT:
-                return LeafNode(None, self.text).to_html()
-            case TextType.BOLD:
-                return LeafNode("b", self.text).to_html()
-            case TextType.ITALIC:
-                return LeafNode("i", self.text).to_html()
-            case TextType.CODE:
-                return LeafNode("code", self.text).to_html()
-            case TextType.LINKS:
-                return LeafNode("a", self.text, {"href": self.url}).to_html()
-            case TextType.IMAGES:
-                return LeafNode("img", "", {"src": self.url, "alt": self.text}).to_html()
-            case _:
-                raise ValueError(f"Invalid text type: {self.text_type}")
+def text_node_to_html_node(text_node):
+    if text_node.text_type == TextType.TEXT:
+        return LeafNode(None, text_node.text)
+    if text_node.text_type == TextType.BOLD:
+        return LeafNode("b", text_node.text)
+    if text_node.text_type == TextType.ITALIC:
+        return LeafNode("i", text_node.text)
+    if text_node.text_type == TextType.CODE:
+        return LeafNode("code", text_node.text)
+    if text_node.text_type == TextType.LINKS:
+        return LeafNode("a", text_node.text, {"href": text_node.url})
+    if text_node.text_type == TextType.IMAGES:
+        return LeafNode("img", "", {"src": text_node.url, "alt": text_node.text})
+    raise ValueError(f"Invalid text type: {text_node.text_type}")
